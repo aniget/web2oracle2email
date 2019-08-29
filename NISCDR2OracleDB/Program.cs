@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
+using NISCDR2OracleDB.Contracts;
 using System;
 using System.IO;
 
@@ -20,7 +20,7 @@ namespace NISCDR2OracleDB
                 var envVariable = Environment.GetEnvironmentVariable("ASPNETCORE_NISCDR2OracleDb_ENVIRONMENT"); //using ASPNETCORE_NISCDR2OracleDb_ as a prefix in order to be able to distinguish the config (environment variables) specific for this project 
                 var isDevelopment = string.IsNullOrEmpty(envVariable) || envVariable.ToLower() == "development";
                 //Determines the working environment as IHostingEnvironment is unavailable in a console app
-                
+
                 //https://cpratt.co/asp-net-core-configuration-with-environment-variables-in-iis/
                 //above link explains how to use UserSecrets while in Dev and Environmet variables while in Production (IIS)
                 var builder = new ConfigurationBuilder()
@@ -50,6 +50,8 @@ namespace NISCDR2OracleDB
                     .AddOptions()
                     .AddSingleton<ICDR, CDR>()
                     .AddSingleton<IEngine, Engine>()
+                    .AddSingleton<IService, Service>()
+
                     .BuildServiceProvider();
 
                 var engine = serviceProvider.GetService<IEngine>();

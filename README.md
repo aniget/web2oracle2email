@@ -1,16 +1,19 @@
-WEB2ORACLE
+WEB2ORACLE2EMAIL
 =============
 
 Description:
-This is ASPNET Core 2.0 Console Application that downloads data file in predefined (csv) format
 
-The application follows these steps:
+This is ASPNET Core 2.0 Console Application that performs the following tasks:
 1. Download CSV File From Web Server on a daily basis (scheduled in Task Scheduler or similar)
 2. Read CSV file into a collection
 3. Validate information in CSV file itself
-4. Validate information in CSV file prior to Db Insert against the information in the Db
-5. Build the Command text by using multiple command parameters of different types
+4. Validate information in CSV file prior to Db Insert against the information currently into the Db
+5. Build the SQL Command text by using multiple command parameters of different types and based on that
 6. Bulk Insert the information into a table in Oracle Database using Oracle ManagedDataAccess Driver
+7. Fires a SQL Query to get specific data - daily figures from Oracle DB and load them into a collection
+8. Save the collected data into Excel file in "xlsx" format using EPPlus library
+9. Send email with the attached Excel file using Windows authentication
+
 
 Console application contains:
 - DI using constructor injections and the native .Net Core DI container to instantiate types, 

@@ -154,7 +154,6 @@ namespace NISCDR2OracleDB
                         cmd.Parameters.Add(callId);
 
                         var numberOfCDRs = cdrList.Count;
-                        //var numberOfCDRs = 40000;
 
                         //instantiate arrays to hold the values of the parameters
                         string[] cdrStartTimes = new string[numberOfCDRs];
