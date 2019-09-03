@@ -6,6 +6,7 @@ namespace NISCDR2OracleDB.Contracts
     {
         ICollection<IServiceModel> GetData(string connectionString, string dailyExportScript);
         void ExportDataToExcelUsingEPPlus(ICollection<IServiceModel> dataFromDb, string filePath, string fileName);
-        void SendExportedDataOverEmail(string emailFrom, string EmailTo, string emailCs, string emailSubject, string emailBody, string EmailHost, string filePathAndName);
+        void SendEmail(string emailFrom, string EmailTo, string emailSubject, string emailBody, string EmailHost, string emailCc
+            = "", bool attachmentIsRequired = false, string filePathAndName = "");
     }
 }

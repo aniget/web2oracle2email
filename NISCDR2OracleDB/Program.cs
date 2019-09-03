@@ -56,9 +56,7 @@ namespace NISCDR2OracleDB
 
                 var engine = serviceProvider.GetService<IEngine>();
                 engine.Run();
-
             }
-
 
             catch (Exception ex)
             {

@@ -264,7 +264,7 @@ namespace NISCDR2OracleDB
 
                         //build the command string
                         //https://stackoverflow.com/questions/12765181/ora-01843-not-a-valid-month-working-on-db-but-not-when-doing-the-same-on-asp
-                        cmd.CommandText = "insert into " + Constants.cdrTable + " (StartTime, A_number, B_number, C_number, DestPrefix, BuyRate, SellRate, DURATION, PartnerId, Trunk, TerminateCauseId, Sipiax, BuyAmount, SellAmount, Margin, Markup, CallId) values (TO_DATE(:1,'RRRR-MM-DD HH24:MI:SS'), :2, :3, :4, :5, :6, :7, :8, :9, :10, :11, :12, :13, :14, :15, :16, :17)";
+                        cmd.CommandText = "insert into " + secrets.OracleTable + " (StartTime, A_number, B_number, C_number, DestPrefix, BuyRate, SellRate, DURATION, PartnerId, Trunk, TerminateCauseId, Sipiax, BuyAmount, SellAmount, Margin, Markup, CallId) values (TO_DATE(:1,'RRRR-MM-DD HH24:MI:SS'), :2, :3, :4, :5, :6, :7, :8, :9, :10, :11, :12, :13, :14, :15, :16, :17)";
 
                         //set the number of elements that each array contains
                         cmd.ArrayBindCount = cdrBnumbers.Length;
@@ -316,7 +316,7 @@ namespace NISCDR2OracleDB
                     {
                         con1.Open();
 
-                        cmd.CommandText = "select StartTime from " + Constants.cdrTable + " where to_char(trunc(StartTime),'DD.MM.YYYY') = '" + firstCDRDate.ToString("dd.MM.yyyy") + "'";
+                        cmd.CommandText = "select StartTime from " + secrets.OracleTable + " where to_char(trunc(StartTime),'DD.MM.YYYY') = '" + firstCDRDate.ToString("dd.MM.yyyy") + "'";
 
                         OracleDataReader reader = cmd.ExecuteReader();
 

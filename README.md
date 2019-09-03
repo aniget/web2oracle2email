@@ -13,6 +13,7 @@ This is ASPNET Core 2.0 Console Application that performs the following tasks:
 7. Fires a SQL Query to get specific data - daily figures from Oracle DB and load them into a collection
 8. Save the collected data into Excel file in "xlsx" format using EPPlus library
 9. Send email with the attached Excel file using Windows authentication
+10. In case of errors an email will be sent to dedicated recipient with error message
 
 
 Console application contains:

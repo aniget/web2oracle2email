@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using NISCDR2OracleDB.Contracts;
 using System;
+using System.Linq;
 
 namespace NISCDR2OracleDB
 {
@@ -21,17 +22,17 @@ namespace NISCDR2OracleDB
         {
             try
             {
-                cdrFile.Download(secrets.CDRFileDownloadUrl, Constants.csvFile, secrets.ConnectionProxyName, secrets.ConnectionProxyPort);
+                cdrFile.Download(secrets.CDRFileDownloadUrl, secrets.CSVFilePathAndName, secrets.ConnectionProxyName, secrets.ConnectionProxyPort);
 
                 //verify that there are no CDRs in the DB with the date of the first CDR in the file (to avoid unnecessary attempt for insert)
-                var firstCDR = cdrFile.ReadCSV2List(Constants.csvFile, true)[0];
+                var firstCDR = cdrFile.ReadCSV2List(secrets.CSVFilePathAndName, true)[0];
                 DateTime firstCDRDate = DateTime.Parse(firstCDR.StartTime).Date;
                 if (cdrFile.DbAlreadyContainsCDRsWithStartDate(firstCDRDate, secrets.OracleConnectionString))
                 {
                     throw new ArgumentException("there are CDRs in the DB with the date of the first CDR in the file ");
                 }
 
-                var cdrList = cdrFile.ReadCSV2List(Constants.csvFile);
+                var cdrList = cdrFile.ReadCSV2List(secrets.CSVFilePathAndName);
 
                 //validate cdrList
                 cdrFile.ValidateList(cdrList);
@@ -49,12 +50,14 @@ namespace NISCDR2OracleDB
 
 
                 //Send email with the attached Excel file using Windows authentication
-                service.SendExportedDataOverEmail(secrets.EmailFrom, secrets.EmailTo, secrets.EmailCc, secrets.EmailSubject, secrets.EmailBody, secrets.EmailHost, secrets.DailyExportFilePath + secrets.DailyExportFileName);
-
+                service.SendEmail(secrets.EmailFrom, secrets.EmailTo, secrets.EmailSubject, secrets.EmailBody, secrets.EmailHost, secrets.EmailCc, true, secrets.DailyExportFilePath + secrets.DailyExportFileName);
             }
 
-            catch
+            catch (Exception ex)
             {
+                //send error info over the email, if the error is not related to the smtp client or the sendEmail method itself
+                service.SendEmail(secrets.EmailFrom, secrets.EmailToAdmin, "WEB2ORA2Email error", ex.Message, secrets.EmailHost);
+
                 throw;
             }
 

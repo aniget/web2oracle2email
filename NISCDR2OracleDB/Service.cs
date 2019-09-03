@@ -114,7 +114,7 @@ namespace NISCDR2OracleDB.Contracts
 
         }
 
-        public void SendExportedDataOverEmail(string emailFrom, string emailTo, string emailCc, string emailSubject, string emailBody, string emailHost, string filePathAndName)
+        public void SendEmail(string emailFrom, string emailTo, string emailSubject, string emailBody, string emailHost, string emailCc, bool attachmentIsRequired = false, string filePathAndName = "")
         {
             try
             {
@@ -127,7 +127,8 @@ namespace NISCDR2OracleDB.Contracts
                 MailMessage myMail = new MailMessage(emailFrom, emailTo, emailSubject, emailBody);
 
                 // set encoding
-                myMail.CC.Add(emailCc);
+                if (emailCc != "")
+                    myMail.CC.Add(emailCc);
 
                 // set encoding
                 myMail.SubjectEncoding = System.Text.Encoding.UTF8;
@@ -136,17 +137,19 @@ namespace NISCDR2OracleDB.Contracts
                 // text or html
                 myMail.IsBodyHtml = true;
 
-                // check for an attachment and send email if any
-                Attachment attachment = new Attachment(filePathAndName);
-                if (attachment != null)
+                // check for the need of an attachment and send email if such is present
+                if (attachmentIsRequired)
                 {
+                    Attachment attachment = new Attachment(filePathAndName);
                     myMail.Attachments.Add(new Attachment(filePathAndName));
-                    mySmtpClient.Send(myMail);
+
+                    if (attachment != null)
+                        mySmtpClient.Send(myMail);
+                    else
+                        throw new ArgumentException("No file attached to email and no email sent. Details: There is no such file on the location specified.");
                 }
-                else
-                {
-                    throw new ArgumentException("No file attached to email and no email sent. Details: There is no such file on the location specified.");
-                }
+
+
             }
 
             catch (SmtpException ex)
