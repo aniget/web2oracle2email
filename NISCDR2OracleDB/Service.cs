@@ -36,11 +36,13 @@ namespace NISCDR2OracleDB.Contracts
                         {
                             IServiceModel serviceModel = new ServiceModel
                             {
-                                Service_Date = record.GetDateTime(0),
-                                Service_Name = record.GetString(1),
-                                Number_Of_Calls = record.GetDecimal(2),
-                                Duration_In_Min = record.GetDecimal(3),
-                                Amount_In_Eur = record.GetDecimal(4)
+                                Year_Month = record.GetString(0),
+                                Service_Date = record.GetDateTime(1),
+                                Partner = record.GetString(2),
+                                Service_Name = record.GetString(3),
+                                Number_Of_Calls = record.GetDecimal(4),
+                                Duration_In_Min = record.GetDecimal(5),
+                                Amount_In_Eur = record.GetDecimal(6)
                             };
 
                             serviceData.Add(serviceModel);
@@ -75,7 +77,7 @@ namespace NISCDR2OracleDB.Contracts
                     var workSheet = excel.Workbook.Worksheets.Add("Sheet1");
                     workSheet.Cells[1, 1].LoadFromCollection(dataFromDb, true);
 
-                    using (ExcelRange dataRange = workSheet.Cells["A1:E10"])
+                    using (ExcelRange dataRange = workSheet.Cells["A1:G10"])
                     {
                         dataRange.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
                         dataRange.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
@@ -85,9 +87,9 @@ namespace NISCDR2OracleDB.Contracts
                     {
                         dateRange.Style.Numberformat.Format = "DD.MM.YYYY";
                     }
-                    using (ExcelRange sumRange = workSheet.Cells["D10"])
+                    using (ExcelRange sumRange = workSheet.Cells["F10"])
                     {
-                        sumRange.Formula = "=SUM(" + workSheet.Cells[2, 4].Address + ":" + workSheet.Cells[9, 4].Address + ")";
+                        sumRange.Formula = "=SUM(" + workSheet.Cells[2, 6].Address + ":" + workSheet.Cells[9, 6].Address + ")";
                         sumRange.Style.Font.Bold = true;
                     }
 
@@ -95,7 +97,7 @@ namespace NISCDR2OracleDB.Contracts
 
                     FileStream objFileStrm = File.Create(fileName);
 
-                    using (ExcelRange dataRangeFilled = workSheet.Cells["A:E"])
+                    using (ExcelRange dataRangeFilled = workSheet.Cells["A:G"])
                     {
                         dataRangeFilled.AutoFitColumns();
                     }
@@ -143,11 +145,11 @@ namespace NISCDR2OracleDB.Contracts
                     Attachment attachment = new Attachment(filePathAndName);
                     myMail.Attachments.Add(new Attachment(filePathAndName));
 
-                    if (attachment != null)
-                        mySmtpClient.Send(myMail);
-                    else
+                    if (attachment == null)
                         throw new ArgumentException("No file attached to email and no email sent. Details: There is no such file on the location specified.");
                 }
+
+                mySmtpClient.Send(myMail);
 
 
             }
