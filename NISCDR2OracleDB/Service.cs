@@ -77,19 +77,22 @@ namespace NISCDR2OracleDB.Contracts
                     var workSheet = excel.Workbook.Worksheets.Add("Sheet1");
                     workSheet.Cells[1, 1].LoadFromCollection(dataFromDb, true);
 
-                    using (ExcelRange dataRange = workSheet.Cells["A1:G10"])
+                    //find number of rows loaded and use it in defining the range of data
+                    var numberOfRows = dataFromDb.Count;
+
+                    using (ExcelRange dataRange = workSheet.Cells["A1:G" + (numberOfRows + 3)])
                     {
                         dataRange.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
                         dataRange.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
                         dataRange.Style.Numberformat.Format = "#,##0";
                     }
-                    using (ExcelRange dateRange = workSheet.Cells["A2:A9"])
+                    using (ExcelRange dateRange = workSheet.Cells["B2:B" + (numberOfRows + 1)])
                     {
                         dateRange.Style.Numberformat.Format = "DD.MM.YYYY";
                     }
-                    using (ExcelRange sumRange = workSheet.Cells["F10"])
+                    using (ExcelRange sumRange = workSheet.Cells["F" + (numberOfRows + 3)])
                     {
-                        sumRange.Formula = "=SUM(" + workSheet.Cells[2, 6].Address + ":" + workSheet.Cells[9, 6].Address + ")";
+                        sumRange.Formula = "=SUM(" + workSheet.Cells[2, 6].Address + ":" + workSheet.Cells[(numberOfRows + 1), 6].Address + ")";
                         sumRange.Style.Font.Bold = true;
                     }
 
